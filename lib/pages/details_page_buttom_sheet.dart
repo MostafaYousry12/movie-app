@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class DetailsPageButtomSheet extends StatelessWidget {
+class DetailsPageButtomSheet extends StatefulWidget {
   const DetailsPageButtomSheet({super.key});
 
   @override
+  State<DetailsPageButtomSheet> createState() => _DetailsPageButtomSheetState();
+}
+
+class _DetailsPageButtomSheetState extends State<DetailsPageButtomSheet> {
+  List<String> getFormattedDates() {
+    final now = DateTime.now();
+    final formatter = DateFormat('EEE d');
+    return List.generate(7, (index) {
+      final date = now.add(Duration(days: index));
+      return formatter.format(date);
+    });
+  }
+
+  int track = 0;
+  @override
   Widget build(BuildContext context) {
+    final dates = getFormattedDates();
     return Container(
       padding: EdgeInsets.all(16),
       height: 400,
@@ -45,6 +62,45 @@ class DetailsPageButtomSheet extends StatelessWidget {
                 color: Colors.white.withOpacity(.8),
                 fontWeight: FontWeight.w500),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: dates.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    track = index;
+                    setState(() {});
+                  },
+                  child: Container(
+                    width: 100,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Color(0xffeed51e),
+                        border: Border.all(
+                          color: track == index ? Colors.white : Colors.black,
+                          width: 2,
+                        )),
+                    child: Center(
+                      child: Text(
+                        dates[index],
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
         ],
       ),
     );
